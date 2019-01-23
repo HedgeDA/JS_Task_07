@@ -2,7 +2,7 @@ let currentSlide;
 let actions = {};
 
 function actionClick(event) {
-  if (event.target.disabled || actions.hasOwnProperty(event.target)){
+  if (event.target.classList.contains('disabled') || actions.hasOwnProperty(event.target)) {
     event.preventDefault();
     return false;
   }
@@ -26,11 +26,25 @@ function actionClick(event) {
 
   currentSlide.classList.add('slide-current');
 
-  actions.first.disabled = !currentSlide.previousElementSibling;
-  actions.prev.disabled = !currentSlide.previousElementSibling;
+  checkAccessibility();
+}
 
-  actions.last.disabled = !currentSlide.nextElementSibling;
-  actions.next.disabled = !currentSlide.nextElementSibling;
+function checkAccessibility() {
+  if (currentSlide.previousElementSibling) {
+    actions.first.classList.remove('disabled');
+    actions.prev.classList.remove('disabled');
+  } else {
+    actions.first.classList.add('disabled');
+    actions.prev.classList.add('disabled');
+  }
+
+  if (currentSlide.nextElementSibling) {
+    actions.last.classList.remove('disabled');
+    actions.next.classList.remove('disabled');
+  } else {
+    actions.last.classList.add('disabled');
+    actions.next.classList.add('disabled');
+  }
 }
 
 function init() {
@@ -43,8 +57,8 @@ function init() {
   currentSlide = document.querySelector('.slides').firstElementChild;
   currentSlide.classList.add('slide-current');
 
-  actions.first.disabled = true;
-  actions.prev.disabled = true;
+  actions.first.classList.add('disabled');
+  actions.prev.classList.add('disabled');
 }
 
 document.addEventListener('DOMContentLoaded', init);
